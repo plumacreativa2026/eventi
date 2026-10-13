@@ -20,7 +20,7 @@ const montserrat = localFont({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Inviti per feste ed eventi · plūmacreativa", template: "%s · plūmacreativa eventi" },
+  title: { default: "Inviti per feste ed eventi · Plumacreativa", template: "%s · Plumacreativa eventi" },
   description: "Crea inviti, menu e segnaposti per nascite, battesimi, compleanni, lauree e anniversari. Invito digitale da mandare su WhatsApp o stampa su carta pregiata.",
 };
 

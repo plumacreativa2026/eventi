@@ -5,8 +5,8 @@ export function Header() {
   return (
     <header className="hdr">
       <div className="wrap">
-        <Link href="/" className="brand" aria-label="plūmacreativa eventi, home">
-          <span className="b">plūmacreativa.</span>
+        <Link href="/" className="brand" aria-label="Plumacreativa eventi, home">
+          <span className="b">Plumacreativa</span>
           <span className="s">eventi</span>
         </Link>
         <nav>

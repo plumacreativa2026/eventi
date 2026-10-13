@@ -25,7 +25,7 @@ export default function Termini() {
         Il cliente è responsabile di controllare testi e nomi prima dell&apos;ordine; dopo l&apos;ordine il progetto viene bloccato.
       </p>
       <h2>Contenuti</h2>
-      <p>Il cliente è responsabile dei testi che inserisce. Le grafiche dei modelli restano di proprietà di plūmacreativa e possono essere usate solo per l&apos;evento del cliente.</p>
+      <p>Il cliente è responsabile dei testi che inserisce. Le grafiche dei modelli restano di proprietà di Plumacreativa e possono essere usate solo per l&apos;evento del cliente.</p>
       <h2>Reclami</h2>
       <p>Per qualsiasi problema contattaci{CONTATTO_EMAIL && <> a {CONTATTO_EMAIL}</>}. Foro competente: quello del consumatore.</p>
     </Legal>

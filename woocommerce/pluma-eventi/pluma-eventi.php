@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: plūma eventi
+ * Plugin Name: Pluma eventi
  * Description: Collega eventi.plumacreativa.it al negozio: porta nel carrello inviti, menu e segnaposti personalizzati e avvisa l'app quando l'ordine è pagato.
  * Version: 1.0.0
- * Author: plūmacreativa
+ * Author: Plumacreativa
  * Requires Plugins: woocommerce
  * Requires PHP: 7.4
  * WC requires at least: 8.0
@@ -73,9 +73,9 @@ function pluma_ev_crea_prodotti() {
     return $creati;
 }
 
-// ---------- impostazioni: WooCommerce → plūma eventi ----------
+// ---------- impostazioni: WooCommerce → Pluma eventi ----------
 add_action('admin_menu', function () {
-    add_submenu_page('woocommerce', 'plūma eventi', 'plūma eventi', 'manage_woocommerce', 'pluma-eventi', 'pluma_ev_pagina');
+    add_submenu_page('woocommerce', 'Pluma eventi', 'Pluma eventi', 'manage_woocommerce', 'pluma-eventi', 'pluma_ev_pagina');
 });
 
 function pluma_ev_pagina() {
@@ -94,7 +94,7 @@ function pluma_ev_pagina() {
     }
     ?>
     <div class="wrap">
-        <h1>plūma eventi</h1>
+        <h1>Pluma eventi</h1>
         <?php if ($msg): ?><div class="notice notice-success"><p><?php echo esc_html($msg); ?></p></div><?php endif; ?>
         <?php if (get_option('woocommerce_prices_include_tax') === 'yes'): ?>
             <div class="notice notice-warning"><p>Il negozio è impostato con prezzi <b>IVA inclusa</b>, ma i prezzi dei prodotti eventi sono IVA esclusa: aggiornali sui prodotti oppure scrivici.</p></div>

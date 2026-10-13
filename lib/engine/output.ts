@@ -39,7 +39,7 @@ function draw(doc: PDFKit.PDFDocument, node: Node) {
 // PDF vettoriale, una pagina per scena, formato finito + abbondanza, senza crocini, testo in tracciati, CMYK
 export function scenesToPdf(scenes: Scene[], title: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ autoFirstPage: false, margin: 0, info: { Title: title, Author: "plūmacreativa", Creator: "eventi.plumacreativa.it" } });
+    const doc = new PDFDocument({ autoFirstPage: false, margin: 0, info: { Title: title, Author: "Plumacreativa", Creator: "eventi.plumacreativa.it" } });
     const chunks: Buffer[] = [];
     doc.on("data", (c: Buffer) => chunks.push(c));
     doc.on("end", () => resolve(Buffer.concat(chunks)));

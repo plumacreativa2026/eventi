@@ -4,7 +4,7 @@ import type { Fonts } from "./text";
 export function watermark(fonts: Fonts, w: number, h: number) {
   const f = fonts.montserratMedium;
   const size = Math.min(w, h) * 0.055;
-  const text = "ANTEPRIMA · PLŪMACREATIVA";
+  const text = "ANTEPRIMA · PLUMACREATIVA";
   const tw = f.getAdvanceWidth(text, size, { letterSpacing: 0.2 });
   const parts: string[] = [];
   const step = size * 5.5;

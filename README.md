@@ -1,4 +1,4 @@
-# plūmacreativa · eventi
+# Plumacreativa · eventi
 
 App per creare inviti, menu e segnaposti per nascite, battesimi, compleanni, lauree e anniversari.
 Indirizzo: **eventi.plumacreativa.it**.
@@ -30,7 +30,7 @@ Indirizzo: **eventi.plumacreativa.it**.
 | `STRIPE_SECRET_KEY` | chiave segreta Stripe |
 | `STRIPE_WEBHOOK_SECRET` | segreto del webhook `https://eventi.plumacreativa.it/api/stripe/webhook` (evento `checkout.session.completed`) |
 | `WOO_SHOP_URL` | `https://plumacreativa.it` |
-| `WOO_SECRET` | chiave segreta mostrata dal plugin in WooCommerce → plūma eventi |
+| `WOO_SECRET` | chiave segreta mostrata dal plugin in WooCommerce → Pluma eventi |
 | `ADMIN_PASSWORD` | password dell'area riservata |
 | `NEXT_PUBLIC_CONTATTO_EMAIL` | email per preventivi e contatti |
 
