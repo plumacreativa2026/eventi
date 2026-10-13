@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Footer, Header } from "@/components/Chrome";
-import { conIva, euro, EVENTI, PREZZI } from "@/lib/catalog";
+import { euro, EVENTI, PREZZI } from "@/lib/catalog";
 import { CONTATTO_EMAIL } from "@/lib/site";
 
 const RIGHE: [string, number][] = [
@@ -66,7 +66,7 @@ export default function Home() {
                 Un&apos;immagine JPG da mandare su WhatsApp o per email. La crei e la scarichi subito dopo il pagamento.
               </p>
               <p style={{ fontFamily: "var(--f-title)", fontSize: "1.8rem", color: "var(--marsala)" }}>{euro(PREZZI.digitale)}</p>
-              <p className="muted small">+ IVA · {euro(conIva(PREZZI.digitale))} in totale</p>
+              <p className="muted small">+ IVA</p>
             </div>
             <div>
               <h3>Stampa</h3>

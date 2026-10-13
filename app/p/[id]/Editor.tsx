@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { conIva, euro, PEZZI, PREZZI, righeStampa, VOCI, type PieceId } from "@/lib/catalog";
+import { euro, PEZZI, PREZZI, righeStampa, VOCI, type PieceId } from "@/lib/catalog";
 import { loadFonts } from "@/lib/engine/fonts-client";
 import { modelliPer, modello } from "@/lib/engine/models";
 import { render } from "@/lib/engine/render";
@@ -291,7 +291,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
           ) : (
             <>
               <p className="small">
-                L&apos;invito in JPG da mandare su WhatsApp o per email, senza la scritta «anteprima». {euro(PREZZI.digitale)} + IVA ({euro(conIva(PREZZI.digitale))}).
+                L&apos;invito in JPG da mandare su WhatsApp o per email, senza la scritta «anteprima». {euro(PREZZI.digitale)} + IVA.
               </p>
               <button className="btn main full" onClick={compraDigitale} disabled={busy !== ""}>
                 {busy === "digitale" ? "Un momento…" : "Acquista l'invito digitale"}
