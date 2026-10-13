@@ -18,12 +18,12 @@ export default function Home() {
       <Header />
       <main className="wrap">
         <section className="hero">
-          <p className="eyebrow">Inviti · Menu · Segnaposti</p>
+          <p className="eyebrow">Per i vostri eventi speciali</p>
           <h1>
             Ogni festa merita il suo <em className="t">invito</em>
           </h1>
           <p className="lead">
-            Scegli un modello, scrivi i tuoi testi e guarda il risultato mentre lo crei. Poi mandalo su WhatsApp oppure fallo stampare da noi su carta pregiata.
+            Scegli un modello, scrivi i tuoi testi e guarda il risultato mentre lo crei. Puoi acquistare l&apos;invito digitale da mandare su WhatsApp a {euro(PREZZI.digitale)} + IVA, oppure creare inviti, menu e segnaposti coordinati e farli stampare da noi su carta pregiata.
           </p>
         </section>
 
