@@ -1,69 +1,110 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link";
+import { Footer, Header } from "@/components/Chrome";
+import { conIva, euro, EVENTI, GRUPPI, PREZZI, type Gruppo } from "@/lib/catalog";
+import { CONTATTO_EMAIL } from "@/lib/site";
+
+const RIGHE: [string, number][] = [
+  ["Invito stampato (11,5 × 17 cm)", PREZZI.invito],
+  ["Busta", PREZZI.busta],
+  ["Menu (9,5 × 20 cm)", PREZZI.menu],
+  ["Segnaposto (8 × 5 cm)", PREZZI.segnaposto],
+  ["Segnaposto a cavalierino", PREZZI.cavalierino],
+  ["Impostazione grafica, per ordine", PREZZI.impostazione],
+];
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
+    <>
+      <Header />
+      <main className="wrap">
+        <section className="hero">
+          <p className="eyebrow">Inviti · Menu · Segnaposti</p>
           <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
+            Ogni festa merita il suo <em className="t">invito</em>
           </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="lead">
+            Scegli un modello, scrivi i tuoi testi e guarda il risultato mentre lo crei. Poi mandalo su WhatsApp oppure fallo stampare da noi su carta pregiata.
           </p>
+        </section>
+
+        <div className="steps">
+          <div>
+            <b>1. Scegli</b>
+            <span className="small">l&apos;evento e il modello che ti piace</span>
+          </div>
+          <div>
+            <b>2. Personalizza</b>
+            <span className="small">testi, colori, menu e nomi degli invitati</span>
+          </div>
+          <div>
+            <b>3. Ricevi</b>
+            <span className="small">l&apos;invito digitale subito, o la stampa a casa tua</span>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {(Object.keys(GRUPPI) as Gruppo[]).map((g) => (
+          <section className="group" key={g}>
+            <div className="group-h">
+              <h2>{GRUPPI[g].nome}</h2>
+              <span className="muted small">{GRUPPI[g].descr}</span>
+            </div>
+            <div className="cards">
+              {EVENTI.filter((e) => e.gruppo === g).map((e) => (
+                <Link className="ev" key={e.id} href={`/evento/${e.id}`}>
+                  <h3>{e.nome}</h3>
+                  <span className="muted small">{e.descr}</span>
+                  <span className="go">Scegli il modello →</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        ))}
+
+        <section className="group">
+          <div className="group-h">
+            <h2>Prezzi</h2>
+            <span className="muted small">IVA esclusa · IVA 22%</span>
+          </div>
+          <div className="prices">
+            <div>
+              <h3>Invito digitale</h3>
+              <p className="muted small" style={{ margin: "6px 0 14px" }}>
+                Un&apos;immagine JPG da mandare su WhatsApp o per email. La crei e la scarichi subito dopo il pagamento.
+              </p>
+              <p style={{ fontFamily: "var(--f-title)", fontSize: "1.8rem", color: "var(--marsala)" }}>{euro(PREZZI.digitale)}</p>
+              <p className="muted small">+ IVA · {euro(conIva(PREZZI.digitale))} in totale</p>
+            </div>
+            <div>
+              <h3>Stampa</h3>
+              <table>
+                <tbody>
+                  {RIGHE.map(([n, p]) => (
+                    <tr key={n}>
+                      <td>{n}</td>
+                      <td>{euro(p)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="muted small" style={{ marginTop: 10 }}>
+                Prezzi cadauno + IVA. Spedizione con corriere tracciabile o ritiro in negozio, da scegliere al momento dell&apos;ordine.
+              </p>
+            </div>
+          </div>
+          <div className="custom">
+            <div>
+              <h3>Vuoi qualcosa di unico?</h3>
+              <p className="muted small">Grafica su misura, carte speciali, illustrazioni personalizzate: raccontaci la tua idea e ti prepariamo un preventivo.</p>
+            </div>
+            {CONTATTO_EMAIL && (
+              <a className="btn" href={`mailto:${CONTATTO_EMAIL}?subject=${encodeURIComponent("Preventivo personalizzato evento")}`}>
+                Chiedi un preventivo
+              </a>
+            )}
+          </div>
+        </section>
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }

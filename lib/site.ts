@@ -1,0 +1,10 @@
+// Dati del sito e dell'attività
+export const APP_URL = (process.env.APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+export const SHOP_URL = (process.env.WOO_SHOP_URL ?? "https://plumacreativa.it").replace(/\/$/, "");
+export const CONTATTO_EMAIL = process.env.NEXT_PUBLIC_CONTATTO_EMAIL ?? "";
+
+export const AZIENDA = {
+  nome: "plūmacreativa di Macarena Gonzalez",
+  indirizzo: "Via Fratelli Giuliano 40, 12012 Boves (CN)",
+  piva: "10330450015",
+};
