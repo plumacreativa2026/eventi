@@ -33,6 +33,16 @@ Dolce
 Torta della festa`;
 
 const DEFAULT_TESTI: Record<EventId, Testi> = {
+  bimbi: {
+    invito: { sopra: "Festeggia con noi", nome: "Giulia", corpo: "sabato 15 maggio 2027 alle ore 16:00\nCascina Le Rose · Boves\n\nVi aspettiamo per una merenda in festa", chiusura: "Conferma a mamma Laura · 333 123 4567" },
+    menu: { titolo: "Menù", nome: "La festa di Giulia", portate: "Pizzette e focaccine\nPanini al latte\nSalatini\n\nTorta della festa\nMacedonia e succhi", chiusura: "15 maggio 2027" },
+    segnaposto: { riga: "La festa di Giulia" },
+  },
+  adulti: {
+    invito: { sopra: "Festeggiamo insieme", nome: "Marco", corpo: "sabato 12 giugno 2027 alle ore 20:00\nVilla Belvedere · Cuneo\n\nCena, musica e tanta allegria", chiusura: "Conferma entro il 1° giugno · 333 123 4567" },
+    menu: { titolo: "Menù", nome: "La festa di Marco", portate: PORTATE_STD, chiusura: "12 giugno 2027" },
+    segnaposto: { riga: "La festa di Marco" },
+  },
   nascita: {
     invito: { sopra: "È nata", nome: "Giulia", corpo: "Festeggiamo il suo arrivo\nsabato 15 maggio 2027 alle ore 16:00\nCascina Le Rose · Boves", chiusura: "Vi aspettiamo! Conferma a Laura · 333 123 4567" },
     menu: { titolo: "Menù", nome: "Benvenuta Giulia", portate: PORTATE_STD, chiusura: "15 maggio 2027" },

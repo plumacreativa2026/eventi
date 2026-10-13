@@ -1,24 +1,32 @@
 // Catalogo: eventi, pezzi stampabili, prezzi. Unica fonte di verità per app e carrello.
 
 export type Gruppo = "bimbi" | "adulti";
-export type EventId = "nascita" | "battesimo" | "compleanno-bimbi" | "compleanno" | "laurea" | "anniversario";
+// Le due sezioni; i vecchi id (nascita, battesimo…) restano validi e confluiscono nella loro sezione
+export type EventId = Gruppo | "nascita" | "battesimo" | "compleanno-bimbi" | "compleanno" | "laurea" | "anniversario";
 
-export const EVENTI: { id: EventId; nome: string; gruppo: Gruppo; descr: string }[] = [
-  { id: "nascita", nome: "Nascita", gruppo: "bimbi", descr: "Annunci e feste di benvenuto" },
-  { id: "battesimo", nome: "Battesimo", gruppo: "bimbi", descr: "Inviti, menu e segnaposti per il battesimo" },
-  { id: "compleanno-bimbi", nome: "Compleanno bimbi", gruppo: "bimbi", descr: "Feste di compleanno per i più piccoli" },
-  { id: "compleanno", nome: "Compleanno", gruppo: "adulti", descr: "Dai 18 ai 90 anni" },
-  { id: "laurea", nome: "Laurea", gruppo: "adulti", descr: "Per festeggiare la corona d'alloro" },
-  { id: "anniversario", nome: "Anniversario", gruppo: "adulti", descr: "Nozze d'argento, d'oro e ogni traguardo" },
+export const EVENTI: { id: Gruppo; nome: string; descr: string; occasioni: string[] }[] = [
+  { id: "bimbi", nome: "Feste per bambini", descr: "Nascite, battesimi e compleanni dei più piccoli", occasioni: ["Nascita", "Battesimo", "Compleanno"] },
+  { id: "adulti", nome: "Occasioni speciali", descr: "Compleanni, lauree e anniversari", occasioni: ["Compleanno", "Laurea", "Anniversario"] },
 ];
 
-export const GRUPPI: Record<Gruppo, { nome: string; descr: string }> = {
-  bimbi: { nome: "Feste per bambini", descr: "Nascite, battesimi e compleanni dei più piccoli" },
-  adulti: { nome: "Occasioni speciali", descr: "Compleanni, lauree e anniversari" },
+const SEZIONE: Record<EventId, Gruppo> = {
+  bimbi: "bimbi",
+  adulti: "adulti",
+  nascita: "bimbi",
+  battesimo: "bimbi",
+  "compleanno-bimbi": "bimbi",
+  compleanno: "adulti",
+  laurea: "adulti",
+  anniversario: "adulti",
 };
 
+export function gruppoDi(id: string): Gruppo | undefined {
+  return SEZIONE[id as EventId];
+}
+
 export function evento(id: string) {
-  return EVENTI.find((e) => e.id === id);
+  const g = gruppoDi(id);
+  return EVENTI.find((e) => e.id === g);
 }
 
 // Formati finiti in millimetri (larghezza × altezza). Il cavalierino si piega a metà altezza.

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Footer, Header } from "@/components/Chrome";
-import { evento, type EventId } from "@/lib/catalog";
+import { evento } from "@/lib/catalog";
 import { modelliPer } from "@/lib/engine/models";
 import { nuovoProgetto } from "@/lib/project";
 import { creaProgetto } from "@/lib/store";
@@ -10,21 +10,23 @@ type P = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: P) {
   const e = evento((await params).id);
-  return { title: e ? `Inviti per ${e.nome.toLowerCase()}` : "Evento" };
+  return { title: e ? e.nome : "Evento" };
 }
 
 async function crea(formData: FormData) {
   "use server";
   const ev = evento(String(formData.get("evento")));
-  const mod = modelliPer((ev?.id ?? "nascita") as EventId).find((m) => m.id === formData.get("modello"));
+  const mod = ev && modelliPer(ev.id).find((m) => m.id === formData.get("modello"));
   if (!ev || !mod) redirect("/");
   const p = await creaProgetto(nuovoProgetto(ev.id, mod.id));
   redirect(`/p/${p.id}`);
 }
 
 export default async function Evento({ params }: P) {
-  const e = evento((await params).id);
+  const id = (await params).id;
+  const e = evento(id);
   if (!e) notFound();
+  if (id !== e.id) redirect(`/evento/${e.id}`);
   const models = modelliPer(e.id);
   return (
     <>
@@ -35,7 +37,7 @@ export default async function Evento({ params }: P) {
         </Link>
         <h1 style={{ marginTop: 14 }}>{e.nome}</h1>
         <p className="muted" style={{ marginTop: 8 }}>
-          Scegli un modello: potrai cambiare testi e colori e vedere subito il risultato. Creare e provare è gratis.
+          {e.occasioni.join(", ")}: ogni modello va bene per tutte. Scegli quello che ti piace, potrai cambiare testi e colori e vedere subito il risultato. Creare e provare è gratis.
         </p>
         <div className="models">
           {models.map((m) => {

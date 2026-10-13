@@ -1,4 +1,4 @@
-import type { EventId } from "../catalog";
+import { gruppoDi, type Gruppo } from "../catalog";
 import type { FontId } from "./text";
 import { circle, ellipse, rect, rng, rotateAbout, type Node } from "./scene";
 
@@ -13,7 +13,7 @@ export type Model = {
   id: string;
   nome: string;
   descr: string;
-  eventi: EventId[];
+  gruppi: Gruppo[];
   palettes: Palette[];
   fonts: { name: FontId; nameSize: number; caps: FontId; body: FontId };
   decor: (a: Area, p: Palette) => Decor;
@@ -208,14 +208,13 @@ function coriandoli(a: Area, p: Palette): Decor {
 }
 
 // ---------- Modelli ----------
-const BIMBI: EventId[] = ["nascita", "battesimo", "compleanno-bimbi"];
 
 export const MODELLI: Model[] = [
   {
     id: "nuvole",
     nome: "Nuvole",
     descr: "Nuvole morbide e stelline, per accogliere i più piccoli",
-    eventi: ["nascita", "battesimo"],
+    gruppi: ["bimbi"],
     fonts: { name: "greatVibes", nameSize: 54, caps: "montserratMedium", body: "montserratLight" },
     palettes: [
       { nome: "Azzurro", bg: "#F6F9FC", ink: "#44525F", accent: "#7FA7C9", soft: "#DCE8F2", extra: [] },
@@ -228,7 +227,7 @@ export const MODELLI: Model[] = [
     id: "palloncini",
     nome: "Palloncini",
     descr: "Un mazzo di palloncini colorati e coriandoli",
-    eventi: ["compleanno-bimbi", "compleanno"],
+    gruppi: ["bimbi", "adulti"],
     fonts: { name: "snigletBold", nameSize: 40, caps: "montserratMedium", body: "montserratLight" },
     palettes: [
       { nome: "Festa", bg: "#FFFDF9", ink: "#3D405B", accent: "#E07A5F", soft: "#F4F1DE", extra: ["#E07A5F", "#F2CC8F", "#81B29A", "#3D405B"] },
@@ -241,7 +240,7 @@ export const MODELLI: Model[] = [
     id: "coriandoli",
     nome: "Coriandoli",
     descr: "Una pioggia di coriandoli tutt'intorno, allegra e semplice",
-    eventi: ["compleanno-bimbi", "compleanno", "laurea"],
+    gruppi: ["bimbi", "adulti"],
     fonts: { name: "amatic", nameSize: 66, caps: "montserratMedium", body: "montserratLight" },
     palettes: [
       { nome: "Arcobaleno", bg: "#FFFFFF", ink: "#333333", accent: "#E4572E", soft: "#FFF3E8", extra: ["#E4572E", "#F3A712", "#29335C", "#669BBC", "#A8C686"] },
@@ -254,7 +253,7 @@ export const MODELLI: Model[] = [
     id: "alloro",
     nome: "Alloro",
     descr: "Una corona d'alloro elegante, perfetta per lauree e traguardi",
-    eventi: ["laurea", "anniversario", "compleanno", "battesimo"],
+    gruppi: ["adulti", "bimbi"],
     fonts: { name: "greatVibes", nameSize: 54, caps: "montserratMedium", body: "montserratLight" },
     palettes: [
       { nome: "Rosso laurea", bg: "#FFFFFF", ink: "#3A2A28", accent: "#A32D2D", soft: "#F6E9E7", extra: [] },
@@ -267,7 +266,7 @@ export const MODELLI: Model[] = [
     id: "cornice",
     nome: "Cornice",
     descr: "Doppia cornice sottile, essenziale e raffinata",
-    eventi: ["compleanno", "anniversario", "laurea", "battesimo"],
+    gruppi: ["adulti", "bimbi"],
     fonts: { name: "playfairItalic", nameSize: 40, caps: "montserratMedium", body: "montserratLight" },
     palettes: [
       { nome: "Marsala", bg: "#FFFCFA", ink: "#4A3836", accent: "#9F6C68", soft: "#F8F1EC", extra: [] },
@@ -282,8 +281,8 @@ export function modello(id: string) {
   return MODELLI.find((m) => m.id === id) ?? MODELLI[0];
 }
 
-export function modelliPer(evento: EventId) {
-  return MODELLI.filter((m) => m.eventi.includes(evento));
+export function modelliPer(evento: string) {
+  const g = gruppoDi(evento) ?? "bimbi";
+  // prima i modelli pensati per la sezione, poi gli altri
+  return MODELLI.filter((m) => m.gruppi.includes(g)).sort((a, b) => a.gruppi.indexOf(g) - b.gruppi.indexOf(g));
 }
-
-export const isBimbi = (e: EventId) => BIMBI.includes(e);

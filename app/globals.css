@@ -81,6 +81,9 @@ em.t { font-family: var(--f-title); font-style: italic; color: var(--marsala); }
 }
 .ev:hover { border-color: var(--rosa); transform: translateY(-2px); }
 .ev h3 { color: var(--ink); }
+.sezioni { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.ev.big { padding: 40px 36px; gap: 10px; }
+.ev.big h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
 .ev .go { margin-top: 8px; font-size: .74rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--marsala); }
 .prices { background: var(--white); border: 1px solid var(--line); padding: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 .prices table { width: 100%; border-collapse: collapse; font-size: .92rem; }
@@ -155,7 +158,7 @@ em.t { font-family: var(--f-title); font-style: italic; color: var(--marsala); }
 .previews figcaption { font-size: .78rem; color: var(--muted); margin-top: 6px; }
 
 @media (max-width: 900px) {
-  .steps, .cards, .prices { grid-template-columns: 1fr; }
+  .steps, .cards, .prices, .sezioni { grid-template-columns: 1fr; }
   .ed { grid-template-columns: 1fr; }
   .side { max-height: none; position: static; border-left: 0; border-top: 1px solid var(--line); }
   .paper svg { max-height: 70vh; }

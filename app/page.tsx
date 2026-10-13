@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Footer, Header } from "@/components/Chrome";
-import { conIva, euro, EVENTI, GRUPPI, PREZZI, type Gruppo } from "@/lib/catalog";
+import { conIva, euro, EVENTI, PREZZI } from "@/lib/catalog";
 import { CONTATTO_EMAIL } from "@/lib/site";
 
 const RIGHE: [string, number][] = [
@@ -42,23 +42,17 @@ export default function Home() {
           </div>
         </div>
 
-        {(Object.keys(GRUPPI) as Gruppo[]).map((g) => (
-          <section className="group" key={g}>
-            <div className="group-h">
-              <h2>{GRUPPI[g].nome}</h2>
-              <span className="muted small">{GRUPPI[g].descr}</span>
-            </div>
-            <div className="cards">
-              {EVENTI.filter((e) => e.gruppo === g).map((e) => (
-                <Link className="ev" key={e.id} href={`/evento/${e.id}`}>
-                  <h3>{e.nome}</h3>
-                  <span className="muted small">{e.descr}</span>
-                  <span className="go">Scegli il modello →</span>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
+        <section className="group">
+          <div className="sezioni">
+            {EVENTI.map((e) => (
+              <Link className="ev big" key={e.id} href={`/evento/${e.id}`}>
+                <h2>{e.nome}</h2>
+                <span className="muted">{e.occasioni.join(" · ")}</span>
+                <span className="go">Scegli il modello →</span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="group">
           <div className="group-h">

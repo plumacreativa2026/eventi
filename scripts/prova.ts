@@ -16,7 +16,7 @@ for (const [id, f] of Object.entries(FONT_FILES)) {
   (fonts as Record<string, unknown>)[id] = parse(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength));
 }
 for (const m of MODELLI) {
-  const d = nuovoProgetto(m.eventi[0], m.id);
+  const d = nuovoProgetto(m.gruppi[0], m.id);
   d.retro = true;
   for (const piece of ["invito", "menu", "segnaposto", "cavalierino"] as const) {
     const s = render(fonts, d, piece, { nome: "Nonna Maria" });
