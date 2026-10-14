@@ -15,7 +15,7 @@ export default function Termini() {
       <p>Il cliente crea gratuitamente inviti, menu e segnaposti partendo dai modelli disponibili. Creare e modificare un progetto non comporta alcun costo.</p>
       <h2>Invito digitale</h2>
       <p>
-        L&apos;invito digitale è un&apos;immagine JPG che il cliente scarica dopo il pagamento con carta tramite Stripe. Costa {euro(PREZZI.digitale)} + IVA 22% ({euro(conIva(PREZZI.digitale))} in totale) per progetto.
+        L&apos;invito digitale è un&apos;immagine JPG che il cliente scarica dopo il pagamento online tramite Stripe (carta, PayPal, Apple Pay, Google Pay e gli altri metodi proposti al momento del pagamento). Costa {euro(PREZZI.digitale)} + IVA 22% ({euro(conIva(PREZZI.digitale))} in totale) per progetto.
         Trattandosi di contenuto digitale fornito subito dopo il pagamento, con il pagamento il cliente chiede l&apos;esecuzione immediata e accetta di perdere il diritto di recesso (art. 59, lett. o, Codice del Consumo).
       </p>
       <h2>Stampa</h2>
