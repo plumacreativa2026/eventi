@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { euro, PEZZI, PREZZI, righeStampa, VOCI, type PieceId } from "@/lib/catalog";
+import { COLORI_BUSTA, euro, PEZZI, PREZZI, righeStampa, VOCI, type PieceId } from "@/lib/catalog";
 import { loadFonts } from "@/lib/engine/fonts-client";
 import { modelliPer, modello } from "@/lib/engine/models";
 import { render } from "@/lib/engine/render";
@@ -316,6 +316,15 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
                 );
               })}
             </div>
+            {d.qta.busta > 0 && (
+              <label className="f">
+                Colore delle buste
+                <select value={d.coloreBusta} onChange={(e) => set((x) => { x.coloreBusta = e.target.value; })}>
+                  <option value="">Scegli il colore…</option>
+                  {COLORI_BUSTA.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+            )}
             {d.qta.segnaposto > 0 && d.nomi.length === 0 && <p className="msg err small">Scrivi i nomi degli invitati nella scheda Segnaposti.</p>}
             {d.qta.segnaposto > 0 && d.nomi.length > 0 && d.nomi.length !== d.qta.segnaposto && (
               <p className="msg small">
@@ -331,7 +340,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
                 <span className="muted small">Spedizione o ritiro in negozio si scelgono nel carrello.</span>
               </div>
             )}
-            <button className="btn main full" onClick={vaiAlCarrello} disabled={busy !== "" || ordine.righe.length === 0 || (d.qta.segnaposto > 0 && d.nomi.length === 0)}>
+            <button className="btn main full" onClick={vaiAlCarrello} disabled={busy !== "" || ordine.righe.length === 0 || (d.qta.segnaposto > 0 && d.nomi.length === 0) || (d.qta.busta > 0 && !d.coloreBusta)}>
               {busy === "carrello" ? "Un momento…" : "Ordina la stampa"}
             </button>
             <p className="small muted">Prima di ordinare controlla bene testi e nomi: stampiamo esattamente quello che vedi. Dopo l&apos;ordine il progetto si blocca.</p>

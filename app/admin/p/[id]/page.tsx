@@ -73,7 +73,7 @@ export default async function AdminProgetto({ params }: P) {
               <tbody>
                 {ord.righe.map((r) => (
                   <tr key={r.voce}>
-                    <td>{VOCI.find((v) => v.id === r.voce)?.nome}</td>
+                    <td>{VOCI.find((v) => v.id === r.voce)?.nome}{r.voce === "busta" && d.coloreBusta ? ` · ${d.coloreBusta}` : ""}</td>
                     <td>{r.qta}</td>
                     <td>{euro(r.qta * r.prezzo)}</td>
                   </tr>

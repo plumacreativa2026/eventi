@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Pluma eventi
  * Description: Collega eventi.plumacreativa.it al negozio: porta nel carrello inviti, menu e segnaposti personalizzati e avvisa l'app quando l'ordine è pagato.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Plumacreativa
  * Requires Plugins: woocommerce
  * Requires PHP: 7.4
@@ -23,6 +23,11 @@ function pluma_ev_prodotti() {
         'EVENTI-CAVALIERINO'  => ['Segnaposto a cavalierino · eventi', '1.00', false],
         'EVENTI-IMPOSTAZIONE' => ['Impostazione grafica · eventi', '15.00', true],
     ];
+}
+
+// Colori delle buste (stesso elenco dell'app)
+function pluma_ev_colori_busta() {
+    return ['Bianca martellata', 'Bosco', 'Oliva', 'Mela', 'Salvia', 'Zaffiro', 'Cobalto', 'Acqua', 'Blu pallido', 'Terracotta', 'Mandorla', 'Senape', 'Champagne', 'Melanzana', 'Vino', 'Ciliegia', 'Lilla', 'Marsala', 'Rosa Polvere', 'Cipria', 'Rosa Pallido'];
 }
 
 function pluma_ev_opt($k, $def = '') {
@@ -161,7 +166,13 @@ add_action('template_redirect', function () {
         $pid = wc_get_product_id_by_sku(sanitize_text_field($sku));
         $qta = max(0, min(2000, intval($qta)));
         if (!$pid || !$qta) { $ok = $ok && $qta === 0; continue; }
-        if (!WC()->cart->add_to_cart($pid, $qta, 0, [], $dati)) $ok = false;
+        $riga = $dati;
+        if ($sku === 'EVENTI-BUSTA') {
+            $colore = sanitize_text_field($p['b'] ?? '');
+            if (!in_array($colore, pluma_ev_colori_busta(), true)) { $ok = false; continue; }
+            $riga['pluma_eventi']['colore'] = $colore;
+        }
+        if (!WC()->cart->add_to_cart($pid, $qta, 0, [], $riga)) $ok = false;
     }
     if (!$ok) wc_add_notice('Non siamo riusciti ad aggiungere tutto al carrello. Contattaci citando il codice ' . esc_html($p['c']) . '.', 'error');
     wp_safe_redirect(wc_get_cart_url());
@@ -173,6 +184,7 @@ add_filter('woocommerce_get_item_data', function ($data, $item) {
     if (!empty($item['pluma_eventi']['codice'])) {
         $e = $item['pluma_eventi'];
         $data[] = ['key' => 'Progetto', 'value' => $e['codice'], 'display' => esc_html($e['codice'])];
+        if (!empty($e['colore'])) $data[] = ['key' => 'Colore busta', 'value' => $e['colore'], 'display' => esc_html($e['colore'])];
     }
     return $data;
 }, 10, 2);
@@ -190,6 +202,7 @@ add_action('woocommerce_checkout_create_order_line_item', function ($item, $key,
     if (empty($values['pluma_eventi']['codice'])) return;
     $item->add_meta_data('Progetto eventi', $values['pluma_eventi']['codice'], true);
     $item->add_meta_data('_pluma_eventi_id', $values['pluma_eventi']['id'], true);
+    if (!empty($values['pluma_eventi']['colore'])) $item->add_meta_data('Colore busta', $values['pluma_eventi']['colore'], true);
 }, 10, 3);
 
 function pluma_ev_progetti($order) {

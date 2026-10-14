@@ -64,6 +64,11 @@ export const SKU = {
 } as const;
 export type Voce = keyof typeof SKU;
 
+// Colori delle buste: devono coincidere con l'elenco del plugin WooCommerce
+export const COLORI_BUSTA = [
+  "Bianca martellata", "Bosco", "Oliva", "Mela", "Salvia", "Zaffiro", "Cobalto", "Acqua", "Blu pallido", "Terracotta", "Mandorla", "Senape", "Champagne", "Melanzana", "Vino", "Ciliegia", "Lilla", "Marsala", "Rosa Polvere", "Cipria", "Rosa Pallido",
+] as const;
+
 export const VOCI: { id: Voce; nome: string }[] = [
   { id: "invito", nome: "Inviti stampati" },
   { id: "busta", nome: "Buste" },

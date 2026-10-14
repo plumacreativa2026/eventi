@@ -25,6 +25,7 @@ export async function POST(req: NextRequest, { params }: C) {
 
   const { righe } = righeStampa(dati.qta, dati.tipoSegnaposto);
   if (!righe.length) return NextResponse.json({ error: "Indica almeno una quantità da stampare." }, { status: 400 });
+  if (dati.qta.busta > 0 && !dati.coloreBusta) return NextResponse.json({ error: "Scegli il colore delle buste." }, { status: 400 });
   if (dati.qta.segnaposto > 0 && !dati.nomi.length) return NextResponse.json({ error: "Scrivi i nomi degli invitati per i segnaposti." }, { status: 400 });
 
   const payload = {
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest, { params }: C) {
     id: p.id,
     c: p.codice,
     r: Object.fromEntries(righe.map((r) => [SKU[r.voce], r.qta])),
+    b: dati.qta.busta > 0 ? dati.coloreBusta : "",
     t: Math.floor(Date.now() / 1000),
     a: APP_URL,
   };

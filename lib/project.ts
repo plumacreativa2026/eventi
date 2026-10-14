@@ -1,4 +1,4 @@
-import type { EventId, Quantita } from "./catalog";
+import { COLORI_BUSTA, type EventId, type Quantita } from "./catalog";
 
 // Cosa contiene un progetto del cliente (salvato come JSON)
 export type Testi = {
@@ -16,6 +16,7 @@ export type ProjectData = {
   tipoSegnaposto: "piatto" | "cavalierino";
   retro: boolean; // cavalierino: grafica fissa sul retro, ruotata di 180°
   qta: Quantita;
+  coloreBusta: string; // uno di COLORI_BUSTA, obbligatorio se si ordinano buste
 };
 
 const PORTATE_STD = `Antipasti
@@ -87,6 +88,7 @@ export function nuovoProgetto(evento: EventId, modello: string): ProjectData {
     tipoSegnaposto: "piatto",
     retro: false,
     qta: { invito: 0, busta: 0, menu: 0, segnaposto: 0 },
+    coloreBusta: "",
   };
 }
 
@@ -120,5 +122,6 @@ export function sanifica(d: ProjectData): ProjectData {
     tipoSegnaposto: d.tipoSegnaposto === "cavalierino" ? "cavalierino" : "piatto",
     retro: !!d.retro,
     qta: { invito: int(d.qta?.invito), busta: int(d.qta?.busta), menu: int(d.qta?.menu), segnaposto: int(d.qta?.segnaposto) },
+    coloreBusta: (COLORI_BUSTA as readonly string[]).includes(d.coloreBusta) ? d.coloreBusta : "",
   };
 }
