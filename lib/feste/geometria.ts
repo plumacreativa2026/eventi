@@ -34,37 +34,33 @@ export function candyPath(x: number, y: number, w: number, h: number) {
   return d + "Z";
 }
 
-// Onda continua lungo un rettangolo arrotondato: anche gli angoli restano morbidi
+// Onda: ogni lato ha un numero intero di onde, simmetriche, con una cresta su ogni angolo arrotondato
 export function ondaPath(x: number, y: number, w: number, h: number) {
-  const m = Math.min(w, h), a = m * 0.028, rc = m * 0.13;
+  const m = Math.min(w, h), a = m * 0.03, rc = m * 0.12, lam = m * 0.4;
   const X0 = x + a, Y0 = y + a, W0 = w - 2 * a, H0 = h - 2 * a, sx = W0 - 2 * rc, sy = H0 - 2 * rc, arc = (Math.PI * rc) / 2;
-  const per = 2 * (sx + sy) + 4 * arc, nW = Math.max(4, Math.round(per / (m * 0.42))), N = Math.max(240, nW * 24);
+  const kx = Math.max(1, Math.round(sx / lam)), ky = Math.max(1, Math.round(sy / lam));
+  // lato: punto, normale esterna, scostamento (cresta agli estremi: cos)
+  const side = (L: number, k: number, fn: (u: number) => number[]) => (u: number) => {
+    const [px, py, nx, ny] = fn(u), o = a * Math.cos((2 * Math.PI * k * u) / L);
+    return [px + nx * o, py + ny * o];
+  };
   const corner = (cx: number, cy: number, t0: number) => (u: number) => {
-    const t = t0 + u / rc;
-    return [cx + Math.cos(t) * rc, cy + Math.sin(t) * rc, Math.cos(t), Math.sin(t)];
+    const t = t0 + u / rc, r = rc + a;
+    return [cx + Math.cos(t) * r, cy + Math.sin(t) * r];
   };
-  const segs: [number, (u: number) => number[]][] = [
-    [sx, (u) => [X0 + rc + u, Y0, 0, -1]],
-    [arc, corner(X0 + W0 - rc, Y0 + rc, -Math.PI / 2)],
-    [sy, (u) => [X0 + W0, Y0 + rc + u, 1, 0]],
-    [arc, corner(X0 + W0 - rc, Y0 + H0 - rc, 0)],
-    [sx, (u) => [X0 + W0 - rc - u, Y0 + H0, 0, 1]],
-    [arc, corner(X0 + rc, Y0 + H0 - rc, Math.PI / 2)],
-    [sy, (u) => [X0, Y0 + H0 - rc - u, -1, 0]],
-    [arc, corner(X0 + rc, Y0 + rc, Math.PI)],
+  const segs: [number, number, (u: number) => number[]][] = [
+    [sx, kx * 16, side(sx, kx, (u) => [X0 + rc + u, Y0, 0, -1])],
+    [arc, 8, corner(X0 + W0 - rc, Y0 + rc, -Math.PI / 2)],
+    [sy, ky * 16, side(sy, ky, (u) => [X0 + W0, Y0 + rc + u, 1, 0])],
+    [arc, 8, corner(X0 + W0 - rc, Y0 + H0 - rc, 0)],
+    [sx, kx * 16, side(sx, kx, (u) => [X0 + W0 - rc - u, Y0 + H0, 0, 1])],
+    [arc, 8, corner(X0 + rc, Y0 + H0 - rc, Math.PI / 2)],
+    [sy, ky * 16, side(sy, ky, (u) => [X0, Y0 + H0 - rc - u, -1, 0])],
+    [arc, 8, corner(X0 + rc, Y0 + rc, Math.PI)],
   ];
-  const at = (s: number) => {
-    for (const [L, fn] of segs) {
-      if (s <= L) return fn(s);
-      s -= L;
-    }
-    return segs[0][1](0);
-  };
   const pts: number[][] = [];
-  for (let i = 0; i < N; i++) {
-    const [px, py, nx, ny] = at((i / N) * per), o = a * Math.sin((2 * Math.PI * nW * i) / N);
-    pts.push([px + nx * o, py + ny * o]);
-  }
+  for (const [L, n, fn] of segs) for (let i = 0; i < n; i++) pts.push(fn((i / n) * L));
+  const N = pts.length;
   let d = `M${f1(pts[0][0])} ${f1(pts[0][1])}`;
   for (let i = 0; i < N; i++) {
     const p0 = pts[(i - 1 + N) % N], p1 = pts[i], p2 = pts[(i + 1) % N], p3 = pts[(i + 2) % N];
