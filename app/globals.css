@@ -256,5 +256,4 @@ em.t { font-family: var(--f-title); font-style: italic; color: var(--marsala); }
   .ed { grid-template-columns: 1fr; }
   .side { max-height: none; position: static; border-left: 0; border-top: 1px solid var(--line); }
   .paper svg { max-height: 70vh; }
-  .hdr nav a:first-child { display: none; }
 }

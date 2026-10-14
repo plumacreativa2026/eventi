@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AZIENDA, CONTATTO_EMAIL, PAGINA_SERVIZIO, SHOP_URL } from "@/lib/site";
+import { AZIENDA, CONTATTO_EMAIL, PAGINA_SERVIZIO } from "@/lib/site";
 
 export function Header() {
   return (
@@ -10,8 +10,7 @@ export function Header() {
           <span className="s">eventi</span>
         </a>
         <nav>
-          <a href={PAGINA_SERVIZIO}>Come funziona</a>
-          <a href={SHOP_URL}>Il negozio</a>
+          <a href={PAGINA_SERVIZIO}>← Torna al sito</a>
         </nav>
       </div>
     </header>
