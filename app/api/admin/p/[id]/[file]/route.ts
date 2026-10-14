@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { isAdmin } from "@/lib/admin";
-import { serverFonts } from "@/lib/engine/fonts-server";
 import { scenesToPdf, sceneToJpg } from "@/lib/engine/output";
-import { render } from "@/lib/engine/render";
+import { scena } from "@/lib/feste/server";
 import { nomeFile } from "@/lib/files";
 import { leggiProgetto } from "@/lib/store";
 
@@ -20,25 +19,30 @@ export async function GET(_req: NextRequest, { params }: C) {
   const { id, file } = await params;
   const p = await leggiProgetto(id);
   if (!p) return NextResponse.json({ error: "Progetto non trovato" }, { status: 404 });
-  const f = serverFonts();
   const d = p.dati;
+  const sp = d.tipoSegnaposto === "cavalierino" ? "cavalierino" : "segnaposto";
   const send = (buf: Buffer, type: string, name: string) =>
     new NextResponse(new Uint8Array(buf), { headers: { "content-type": type, "content-disposition": `attachment; filename="${name}"`, "cache-control": "no-store" } });
 
   switch (file) {
     case "invito.pdf":
-      return send(await scenesToPdf([render(f, d, "invito")], `Invito ${p.codice}`), "application/pdf", `${nomeFile(p, "invito")}.pdf`);
+      return send(await scenesToPdf([scena(d, "invito")], `Invito ${p.codice}`), "application/pdf", `${nomeFile(p, "invito")}.pdf`);
     case "menu.pdf":
-      return send(await scenesToPdf([render(f, d, "menu")], `Menu ${p.codice}`), "application/pdf", `${nomeFile(p, "menu")}.pdf`);
+      return send(await scenesToPdf([scena(d, "menu")], `Menu ${p.codice}`), "application/pdf", `${nomeFile(p, "menu")}.pdf`);
     case "segnaposti.pdf": {
-      const piece = d.tipoSegnaposto === "cavalierino" ? "cavalierino" : "segnaposto";
-      const pages = [render(f, d, piece, { nome: null }), render(f, d, piece, { nome: d.nomi[0] ?? "Nome Cognome" })];
-      return send(await scenesToPdf(pages, `Segnaposti ${p.codice}`), "application/pdf", `${nomeFile(p, piece === "cavalierino" ? "cavalierini" : "segnaposti")}.pdf`);
+      // pagina 1 senza nome (per l'Unione dati di InDesign), pagina 2 esempio con il primo nome
+      const pages = [scena(d, sp, null), scena(d, sp, d.nomi[0] ?? "Nome Cognome")];
+      return send(await scenesToPdf(pages, `Segnaposti ${p.codice}`), "application/pdf", `${nomeFile(p, sp === "cavalierino" ? "cavalierini" : "segnaposti")}.pdf`);
+    }
+    case "segnaposti-tutti.pdf": {
+      // una pagina per ogni invitato, già con il nome
+      const pages = (d.nomi.length ? d.nomi : ["Nome Cognome"]).map((n) => scena(d, sp, n));
+      return send(await scenesToPdf(pages, `Segnaposti ${p.codice}`), "application/pdf", `${nomeFile(p, sp === "cavalierino" ? "cavalierini-tutti" : "segnaposti-tutti")}.pdf`);
     }
     case "nomi.csv":
       return send(csv(d.nomi), "text/csv; charset=utf-16le", `${nomeFile(p, "nomi")}.csv`);
     case "invito.jpg":
-      return send(await sceneToJpg(render(f, d, "invito")), "image/jpeg", `${nomeFile(p, "invito-digitale")}.jpg`);
+      return send(await sceneToJpg(scena(d, "digitale"), 1080), "image/jpeg", `${nomeFile(p, "invito-digitale")}.jpg`);
   }
   return NextResponse.json({ error: "File sconosciuto" }, { status: 404 });
 }

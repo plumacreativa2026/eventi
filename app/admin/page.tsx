@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Header } from "@/components/Chrome";
 import { evento } from "@/lib/catalog";
 import { isAdmin, login, logout } from "@/lib/admin";
+import { spunto } from "@/lib/feste/spunti";
 import { elencoProgetti } from "@/lib/store";
 import { Stato } from "./Stato";
 
@@ -80,7 +81,7 @@ export default async function Admin({ searchParams }: P) {
                     </Link>
                   </td>
                   <td>
-                    {evento(p.dati.evento)?.nome} · {p.dati.testi.invito.nome}
+                    {evento(p.dati.evento)?.nome} · {spunto(p.dati.spunto)?.nome}
                   </td>
                   <td><Stato s={p.stampa_stato} /></td>
                   <td>{p.digitale_pagato_at ? <span className="tag on">Pagato</span> : <span className="muted">–</span>}</td>

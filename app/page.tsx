@@ -23,18 +23,18 @@ export default function Home() {
             Ogni festa merita il suo <em className="t">invito</em>
           </h1>
           <p className="lead">
-            Scegli un modello, scrivi i tuoi testi e guarda il risultato mentre lo crei. Puoi acquistare l&apos;invito digitale da mandare su WhatsApp a {euro(PREZZI.digitale)} + IVA, oppure creare inviti, menu e segnaposti coordinati e farli stampare da noi su carta pregiata.
+            Parti da uno spunto e cambia tutto quello che vuoi: sfondo, cornice, illustrazioni, caratteri e colori. Guardi il risultato mentre lo crei. Puoi acquistare l&apos;invito digitale da mandare su WhatsApp a {euro(PREZZI.digitale)} + IVA, oppure creare inviti, menu e segnaposti coordinati e farli stampare da noi su carta pregiata.
           </p>
         </section>
 
         <div className="steps">
           <div>
             <b>1. Scegli</b>
-            <span className="small">l&apos;evento e il modello che ti piace</span>
+            <span className="small">uno spunto da cui partire</span>
           </div>
           <div>
             <b>2. Personalizza</b>
-            <span className="small">testi, colori, menu e nomi degli invitati</span>
+            <span className="small">ogni dettaglio, su invito, menu e segnaposti</span>
           </div>
           <div>
             <b>3. Ricevi</b>
@@ -48,7 +48,7 @@ export default function Home() {
               <Link className="ev big" key={e.id} href={`/evento/${e.id}`}>
                 <h2>{e.nome}</h2>
                 <span className="muted">{e.occasioni.join(" · ")}</span>
-                <span className="go">Scegli il modello →</span>
+                <span className="go">Scegli lo spunto →</span>
               </Link>
             ))}
           </div>

@@ -3,7 +3,7 @@
 
 export type Node =
   | { t: "path"; d: string; fill: string; op?: number }
-  | { t: "stroke"; d: string; stroke: string; w: number; op?: number }
+  | { t: "stroke"; d: string; stroke: string; w: number; op?: number; dash?: [number, number]; cap?: "round" | "butt" }
   | { t: "g"; m?: [number, number, number, number, number, number]; c: Node[] };
 
 export type Scene = {
@@ -51,7 +51,7 @@ function attrOp(op?: number) {
 function nodeSvg(node: Node): string {
   if (node.t === "path") return `<path d="${node.d}" fill="${node.fill}"${attrOp(node.op)}/>`;
   if (node.t === "stroke")
-    return `<path d="${node.d}" fill="none" stroke="${node.stroke}" stroke-width="${node.w}" stroke-linecap="round" stroke-linejoin="round"${attrOp(node.op)}/>`;
+    return `<path d="${node.d}" fill="none" stroke="${node.stroke}" stroke-width="${node.w}" stroke-linecap="${node.cap ?? "round"}" stroke-linejoin="round"${node.dash ? ` stroke-dasharray="${node.dash.join(" ")}"` : ""}${attrOp(node.op)}/>`;
   const m = node.m ? ` transform="matrix(${node.m.map(n).join(" ")})"` : "";
   return `<g${m}>${node.c.map(nodeSvg).join("")}</g>`;
 }

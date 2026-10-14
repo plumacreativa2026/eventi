@@ -1,8 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Footer, Header } from "@/components/Chrome";
-import { evento } from "@/lib/catalog";
-import { modelliPer } from "@/lib/engine/models";
+import { evento, gruppoDi } from "@/lib/catalog";
+import { serverAssets } from "@/lib/feste/server";
+import { spuntiPer, spunto } from "@/lib/feste/spunti";
 import { nuovoProgetto } from "@/lib/project";
 import { creaProgetto } from "@/lib/store";
 
@@ -16,9 +17,9 @@ export async function generateMetadata({ params }: P) {
 async function crea(formData: FormData) {
   "use server";
   const ev = evento(String(formData.get("evento")));
-  const mod = ev && modelliPer(ev.id).find((m) => m.id === formData.get("modello"));
-  if (!ev || !mod) redirect("/");
-  const p = await creaProgetto(nuovoProgetto(ev.id, mod.id));
+  const s = spunto(String(formData.get("spunto")));
+  if (!ev || !s || s.gruppo !== gruppoDi(ev.id)) redirect("/");
+  const p = await creaProgetto(nuovoProgetto(serverAssets(), ev.id, s.id));
   redirect(`/p/${p.id}`);
 }
 
@@ -27,7 +28,7 @@ export default async function Evento({ params }: P) {
   const e = evento(id);
   if (!e) notFound();
   if (id !== e.id) redirect(`/evento/${e.id}`);
-  const models = modelliPer(e.id);
+  const lista = spuntiPer(e.id);
   return (
     <>
       <Header />
@@ -37,33 +38,25 @@ export default async function Evento({ params }: P) {
         </Link>
         <h1 style={{ marginTop: 14 }}>{e.nome}</h1>
         <p className="muted" style={{ marginTop: 8 }}>
-          {e.occasioni.join(", ")}: ogni modello va bene per tutte. Scegli quello che ti piace, potrai cambiare testi e colori e vedere subito il risultato. Creare e provare è gratis.
+          Scegli uno spunto da cui partire: sono solo idee. Potrai cambiare tutto, dallo sfondo alla cornice, dalle illustrazioni ai caratteri e ai colori, e vedere subito il risultato su invito, menu e segnaposti. Creare e provare è gratis.
         </p>
         <div className="models">
-          {models.map((m) => {
-            return (
-              <form action={crea} className="model" key={m.id}>
-                <input type="hidden" name="evento" value={e.id} />
-                <input type="hidden" name="modello" value={m.id} />
-                <div className="thumb">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`/anteprima/${e.id}/${m.id}.png`} alt={`Modello ${m.nome}`} width={520} height={769} loading="lazy" />
-                </div>
-                <div>
-                  <h3>{m.nome}</h3>
-                  <p className="muted small">{m.descr}</p>
-                </div>
-                <div className="sw" aria-label="Colori disponibili">
-                  {m.palettes.map((p) => (
-                    <i key={p.nome} title={p.nome} style={{ background: p.accent }} />
-                  ))}
-                </div>
-                <button className="btn main full" type="submit">
-                  Usa questo modello
-                </button>
-              </form>
-            );
-          })}
+          {lista.map((s) => (
+            <form action={crea} className="model" key={s.id}>
+              <input type="hidden" name="evento" value={e.id} />
+              <input type="hidden" name="spunto" value={s.id} />
+              <div className="thumb">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/anteprima/${e.id}/${s.id}.png`} alt={`Spunto ${s.nome}`} width={520} height={769} loading="lazy" />
+              </div>
+              <div>
+                <h3>{s.nome}</h3>
+              </div>
+              <button className="btn main full" type="submit">
+                Parti da qui
+              </button>
+            </form>
+          ))}
         </div>
       </main>
       <Footer />

@@ -31,7 +31,8 @@ function draw(doc: PDFKit.PDFDocument, node: Node) {
     doc.path(node.d).fill(cmyk(node.fill), "non-zero");
   } else {
     if (node.op !== undefined) doc.strokeOpacity(node.op);
-    doc.path(node.d).lineWidth(node.w).lineCap("round").lineJoin("round").stroke(cmyk(node.stroke));
+    if (node.dash) doc.dash(node.dash[0], { space: node.dash[1] });
+    doc.path(node.d).lineWidth(node.w).lineCap(node.cap ?? "round").lineJoin("round").stroke(cmyk(node.stroke));
   }
   doc.restore();
 }

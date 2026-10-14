@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { serverFonts } from "@/lib/engine/fonts-server";
 import { sceneToJpg } from "@/lib/engine/output";
-import { render } from "@/lib/engine/render";
+import { scena } from "@/lib/feste/server";
 import { leggiProgetto } from "@/lib/store";
 import { nomeFile } from "@/lib/files";
 
@@ -13,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: C) {
   const p = await leggiProgetto(id);
   if (!p) return NextResponse.json({ error: "Progetto non trovato" }, { status: 404 });
   if (!p.digitale_pagato_at) return NextResponse.json({ error: "L'invito digitale non è ancora stato acquistato" }, { status: 402 });
-  const jpg = await sceneToJpg(render(serverFonts(), p.dati, "invito"));
+  const jpg = await sceneToJpg(scena(p.dati, "digitale"), 1080);
   return new NextResponse(new Uint8Array(jpg), {
     headers: {
       "content-type": "image/jpeg",

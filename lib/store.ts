@@ -4,6 +4,10 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import type { ProjectData } from "./project";
+import { aggiorna } from "./salva";
+
+// i progetti del vecchio editor si convertono alla lettura
+const conv = (p: Progetto | null): Progetto | null => (p ? { ...p, dati: aggiorna(p.dati) } : null);
 
 // Un progetto salvato. Chi conosce l'id (il link segreto) può modificarlo; il codice è quello che compare nell'ordine.
 export type Progetto = {
@@ -78,17 +82,17 @@ export async function leggiProgetto(id: string): Promise<Progetto | null> {
   if (!UUID.test(id)) return null;
   if (conSupabase()) {
     const { data } = await sb().from(TABLE).select("*").eq("id", id).maybeSingle();
-    return (data as Progetto) ?? null;
+    return conv((data as Progetto) ?? null);
   }
-  return readLocal().find((p) => p.id === id) ?? null;
+  return conv(readLocal().find((p) => p.id === id) ?? null);
 }
 
 export async function progettoDaCodice(codice: string): Promise<Progetto | null> {
   if (conSupabase()) {
     const { data } = await sb().from(TABLE).select("*").eq("codice", codice).maybeSingle();
-    return (data as Progetto) ?? null;
+    return conv((data as Progetto) ?? null);
   }
-  return readLocal().find((p) => p.codice === codice) ?? null;
+  return conv(readLocal().find((p) => p.codice === codice) ?? null);
 }
 
 export async function aggiornaProgetto(id: string, patch: Partial<Omit<Progetto, "id" | "codice" | "created_at">>) {
@@ -108,9 +112,10 @@ export async function elencoProgetti(filtro: "ordini" | "tutti", limit = 200): P
     if (filtro === "ordini") q = q.or("stampa_stato.not.is.null,digitale_pagato_at.not.is.null");
     const { data, error } = await q;
     if (error) throw error;
-    return data as Progetto[];
+    return (data as Progetto[]).map((p) => conv(p)!);
   }
   return readLocal()
+    .map((p) => conv(p)!)
     .filter((p) => filtro === "tutti" || p.stampa_stato || p.digitale_pagato_at)
     .sort((a, b) => b.updated_at.localeCompare(a.updated_at))
     .slice(0, limit);
