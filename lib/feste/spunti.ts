@@ -159,7 +159,7 @@ const PLACE: Record<string, PlaceSpec> = {
  orsetto:{frame:['Elegance',.029,.093,.969,.905],name:[167,.55]},
  fiocco:{frame:['Ovale',.016,.069,.970,.922],name:[105,.53]},
  righe:{frame:['Antico',.064,.061,.955,.962],name:[103,.5]},
- diciotto:{frame:['Onda',.04,.07,.96,.93],name:[118,.5]},
+ diciotto:{frame:['Onda',.045,.15,.955,.85],name:[112,.5]},
  anniversario:{frame:['Doppio arco',.05,.08,.95,.92,true],name:[78,.52]}
 };
 const MENU_DEFAULT =

@@ -93,10 +93,9 @@ export function framePath(A: Assets, shape: string, x: number, y: number, w: num
   const s = Math.min(w, h / Rn), eW = w - s, eH = h - Rn * s, stretched = eW > w * 0.03 || eH > h * 0.03;
   if (stretched && shape === "Candy") return candyPath(x, y, w, h);
   if (shape === "Onda") {
-    // versione lunga disegnata a mano (menu verticale, o ruotata per il segnaposto)
+    // versione lunga disegnata a mano solo per i formati verticali (menu); in orizzontale le onde regolari
     const L = A.ondaLunga, br = h / w;
     if (Math.abs(br / L.r - 1) < 0.26) return L.d.replace(PAIR, (_m, p, q) => f1(x + p * w) + " " + f1(y + q * h));
-    if (Math.abs(br * L.r - 1) < 0.3) return L.d.replace(PAIR, (_m, p, q) => f1(x + (1 - q) * w) + " " + f1(y + p * h));
     if (stretched) return ondaPath(x, y, w, h);
   }
   if (shape === "Ovale") return fr.d.replace(PAIR, (_m, p, q) => f1(x + p * w) + " " + f1(y + q * h)); // ellisse: si allunga in modo naturale
