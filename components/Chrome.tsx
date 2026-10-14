@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { AZIENDA, CONTATTO_EMAIL, SHOP_URL } from "@/lib/site";
+import { AZIENDA, CONTATTO_EMAIL, PAGINA_SERVIZIO, SHOP_URL } from "@/lib/site";
 
 export function Header() {
   return (
     <header className="hdr">
       <div className="wrap">
-        <Link href="/" className="brand" aria-label="Plumacreativa eventi, home">
+        <a href={PAGINA_SERVIZIO} className="brand" aria-label="Plumacreativa eventi, come funziona">
           <span className="b">Plumacreativa</span>
           <span className="s">eventi</span>
-        </Link>
+        </a>
         <nav>
+          <a href={PAGINA_SERVIZIO}>Come funziona</a>
           <a href={SHOP_URL}>Il negozio</a>
         </nav>
       </div>

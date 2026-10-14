@@ -46,6 +46,7 @@ em.t { font-family: var(--f-title); font-style: italic; color: var(--marsala); }
 .brand .b { font-family: var(--f-title); font-size: 1.55rem; color: var(--marsala); }
 .brand .s { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink); font-weight: 500; }
 .hdr nav a { text-decoration: none; font-size: .85rem; font-weight: 500; letter-spacing: .04em; color: var(--ink); }
+.hdr nav { display: flex; gap: 24px; }
 .ftr { border-top: 1px solid var(--line); margin-top: 80px; padding: 28px 0 40px; font-size: .8rem; color: var(--muted); }
 .ftr .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; }
 .ftr a { color: var(--muted); }
@@ -255,5 +256,5 @@ em.t { font-family: var(--f-title); font-style: italic; color: var(--marsala); }
   .ed { grid-template-columns: 1fr; }
   .side { max-height: none; position: static; border-left: 0; border-top: 1px solid var(--line); }
   .paper svg { max-height: 70vh; }
-  .hdr nav { display: none; }
+  .hdr nav a:first-child { display: none; }
 }

@@ -1,16 +1,19 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Footer, Header } from "@/components/Chrome";
-import { euro, EVENTI, PREZZI } from "@/lib/catalog";
-import { CONTATTO_EMAIL } from "@/lib/site";
+import { EVENTI } from "@/lib/catalog";
+import { serverAssets } from "@/lib/feste/server";
+import { SPUNTI, spunto } from "@/lib/feste/spunti";
+import { nuovoProgetto } from "@/lib/project";
+import { creaProgetto } from "@/lib/store";
 
-const RIGHE: [string, number][] = [
-  ["Invito stampato (11,5 × 17 cm)", PREZZI.invito],
-  ["Busta", PREZZI.busta],
-  ["Menu (9,5 × 20 cm)", PREZZI.menu],
-  ["Segnaposto (8 × 5 cm)", PREZZI.segnaposto],
-  ["Segnaposto a cavalierino", PREZZI.cavalierino],
-  ["Impostazione grafica, per ordine", PREZZI.impostazione],
-];
+// Pagina d'ingresso dell'app: tutti gli spunti insieme. La presentazione del servizio (prezzi, modalità) sta sul sito.
+async function crea(formData: FormData) {
+  "use server";
+  const s = spunto(String(formData.get("spunto")));
+  if (!s) redirect("/");
+  const p = await creaProgetto(nuovoProgetto(serverAssets(), s.gruppo, s.id));
+  redirect(`/p/${p.id}`);
+}
 
 export default function Home() {
   return (
@@ -18,85 +21,35 @@ export default function Home() {
       <Header />
       <main className="wrap">
         <section className="hero">
-          <p className="eyebrow">Per i vostri eventi speciali</p>
+          <p className="eyebrow">Inviti, menu e segnaposti</p>
           <h1>
-            Ogni festa merita il suo <em className="t">invito</em>
+            Feste per bambini <em className="t">&amp;</em> occasioni speciali
           </h1>
-          <p className="lead">
-            Parti da uno spunto e cambia tutto quello che vuoi: sfondo, cornice, illustrazioni, caratteri e colori. Guardi il risultato mentre lo crei. Puoi acquistare l&apos;invito digitale da mandare su WhatsApp a {euro(PREZZI.digitale)} + IVA, oppure creare inviti, menu e segnaposti coordinati e farli stampare da noi su carta pregiata.
-          </p>
+          <p className="lead">Scegli uno spunto da cui partire: è solo un&apos;idea. Puoi cambiare tutto, dallo sfondo alla cornice, dalle illustrazioni ai testi.</p>
         </section>
-
-        <div className="steps">
-          <div>
-            <b>1. Scegli</b>
-            <span className="small">uno spunto da cui partire</span>
-          </div>
-          <div>
-            <b>2. Personalizza</b>
-            <span className="small">ogni dettaglio, su invito, menu e segnaposti</span>
-          </div>
-          <div>
-            <b>3. Ricevi</b>
-            <span className="small">l&apos;invito digitale subito, o la stampa a casa tua</span>
-          </div>
-        </div>
-
-        <section className="group">
-          <div className="sezioni">
-            {EVENTI.map((e) => (
-              <Link className="ev big" key={e.id} href={`/evento/${e.id}`}>
-                <h2>{e.nome}</h2>
-                <span className="muted">{e.occasioni.join(" · ")}</span>
-                <span className="go">Scegli lo spunto →</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="group">
-          <div className="group-h">
-            <h2>Prezzi</h2>
-            <span className="muted small">IVA esclusa · IVA 22%</span>
-          </div>
-          <div className="prices">
-            <div>
-              <h3>Invito digitale</h3>
-              <p className="muted small" style={{ margin: "6px 0 14px" }}>
-                Un&apos;immagine JPG da mandare su WhatsApp o per email. La crei e la scarichi subito dopo il pagamento.
-              </p>
-              <p style={{ fontFamily: "var(--f-title)", fontSize: "1.8rem", color: "var(--marsala)" }}>{euro(PREZZI.digitale)}</p>
-              <p className="muted small">+ IVA</p>
+        {EVENTI.map((e) => (
+          <section className="group" key={e.id}>
+            <div className="group-h">
+              <h2>{e.nome}</h2>
+              <span className="muted small">{e.occasioni.join(" · ")}</span>
             </div>
-            <div>
-              <h3>Stampa</h3>
-              <table>
-                <tbody>
-                  {RIGHE.map(([n, p]) => (
-                    <tr key={n}>
-                      <td>{n}</td>
-                      <td>{euro(p)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <p className="muted small" style={{ marginTop: 10 }}>
-                Prezzi cadauno + IVA. Spedizione con corriere tracciabile o ritiro in negozio, da scegliere al momento dell&apos;ordine.
-              </p>
+            <div className="models">
+              {SPUNTI.filter((s) => s.gruppo === e.id).map((s) => (
+                <form action={crea} className="model" key={s.id}>
+                  <input type="hidden" name="spunto" value={s.id} />
+                  <div className="thumb">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/anteprima/${s.gruppo}/${s.id}.png`} alt={`Spunto ${s.nome}`} width={520} height={769} loading="lazy" />
+                  </div>
+                  <h3>{s.nome}</h3>
+                  <button className="btn main full" type="submit">
+                    Parti da qui
+                  </button>
+                </form>
+              ))}
             </div>
-          </div>
-          <div className="custom">
-            <div>
-              <h3>Vuoi qualcosa di unico?</h3>
-              <p className="muted small">Grafica su misura, carte speciali, illustrazioni personalizzate: raccontaci la tua idea e ti prepariamo un preventivo.</p>
-            </div>
-            {CONTATTO_EMAIL && (
-              <a className="btn" href={`mailto:${CONTATTO_EMAIL}?subject=${encodeURIComponent("Preventivo personalizzato evento")}`}>
-                Chiedi un preventivo
-              </a>
-            )}
-          </div>
-        </section>
+          </section>
+        ))}
       </main>
       <Footer />
     </>

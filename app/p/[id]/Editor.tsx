@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { COLORI_BUSTA, euro, gruppoDi, PREZZI, righeStampa, VOCI } from "@/lib/catalog";
+import { COLORI_BUSTA, euro, PREZZI, righeStampa, VOCI } from "@/lib/catalog";
 import type { Assets, Docs } from "@/lib/feste/costanti";
 import { createEditor } from "@/lib/feste/editor-dom";
-import { spuntiPer } from "@/lib/feste/spunti";
+import { SPUNTI } from "@/lib/feste/spunti";
 import { NOMI_ESEMPIO, pulisciNomi, type ProjectData } from "@/lib/project";
 
 type Props = {
@@ -38,7 +38,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
         if (!vivo || !host.current) return;
         ed.current = createEditor(host.current, {
           assets: A,
-          spunti: spuntiPer(gruppoDi(iniziale.evento) ?? "bimbi"),
+          spunti: SPUNTI,
           data: { docs: iniziale.docs, back: iniziale.back, spunto: iniziale.spunto },
           guest: iniziale.nomi[0] ?? "",
           readOnly: bloccato,

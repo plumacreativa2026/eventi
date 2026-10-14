@@ -9,15 +9,15 @@ import type { ProjectData } from "./project";
 const int = (v: unknown, max = 2000) => Math.min(max, Math.max(0, Math.floor(Number(v) || 0)));
 const cut = (v: unknown, n: number) => (typeof v === "string" ? v.slice(0, n) : "");
 
-// Normalizza i dati arrivati dal browser prima di salvarli. L'evento non cambia; lo spunto deve essere della stessa sezione.
+// Normalizza i dati arrivati dal browser prima di salvarli. Lo spunto può essere uno qualsiasi; la sezione (evento) lo segue.
 export function salvabili(attuali: ProjectData, nuovi: Partial<ProjectData>): ProjectData {
   const A = serverAssets();
   const g = gruppoDi(attuali.evento) ?? "bimbi";
-  const sp = spunto(String(nuovi.spunto)) && spunto(String(nuovi.spunto))!.gruppo === g ? String(nuovi.spunto) : attuali.spunto || spuntiPer(g)[0].id;
+  const sp = spunto(String(nuovi.spunto)) ? String(nuovi.spunto) : attuali.spunto || spuntiPer(g)[0].id;
   const riserva = attuali.docs ?? buildAll(A, sp);
   const q = (nuovi.qta ?? {}) as Partial<ProjectData["qta"]>;
   return {
-    evento: attuali.evento,
+    evento: spunto(sp)?.gruppo ?? attuali.evento,
     spunto: sp,
     docs: validaDocs(nuovi.docs, A, riserva),
     back: nuovi.back !== false,
