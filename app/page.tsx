@@ -21,7 +21,7 @@ export default function Home() {
       <Header />
       <main className="wrap">
         <section className="hero">
-          <p className="eyebrow">Inviti, menu e segnaposti</p>
+          <p className="eyebrow">Eventi speciali</p>
           <h1>
             Feste per bambini <em className="t">&amp;</em> occasioni speciali
           </h1>
