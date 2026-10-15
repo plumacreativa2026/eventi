@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Pluma eventi
  * Description: Collega eventi.plumacreativa.it al negozio: porta nel carrello inviti, menu e segnaposti personalizzati e avvisa l'app quando l'ordine è pagato.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Plumacreativa
  * Requires Plugins: woocommerce
  * Requires PHP: 7.4
@@ -91,6 +91,10 @@ function pluma_ev_pagina() {
         $o['app'] = esc_url_raw(trim(wp_unslash($_POST['app'] ?? '')));
         $s = sanitize_text_field(wp_unslash($_POST['secret'] ?? ''));
         if (strlen($s) >= 24) $o['secret'] = $s;
+        foreach (['sped_it', 'sped_ue'] as $k) {
+            $v = str_replace(',', '.', sanitize_text_field(wp_unslash($_POST[$k] ?? '')));
+            if ($v !== '' && is_numeric($v) && $v >= 0) $o[$k] = wc_format_decimal($v, 2);
+        }
         update_option(PLUMA_EV_OPT, $o);
         $msg = 'Impostazioni salvate.';
     }
@@ -112,6 +116,10 @@ function pluma_ev_pagina() {
                     <input class="large-text code" name="secret" value="<?php echo esc_attr(pluma_ev_opt('secret')); ?>" readonly onclick="this.select()">
                     <p class="description">Copiala su Vercel nella variabile <code>WOO_SECRET</code> dell'app eventi. Deve essere identica nei due posti.</p>
                 </td></tr>
+                <tr><th>Spedizione Italia</th><td><input class="small-text" name="sped_it" value="<?php echo esc_attr(pluma_ev_opt('sped_it', '7.00')); ?>"> €
+                    <p class="description">Corriere tracciabile per gli ordini dell'app. Importo IVA esclusa, come i prezzi dei prodotti: WooCommerce aggiunge l'IVA se la spedizione è tassabile (7,00 → 8,54 € IVA inclusa).</p></td></tr>
+                <tr><th>Spedizione Unione Europea</th><td><input class="small-text" name="sped_ue" value="<?php echo esc_attr(pluma_ev_opt('sped_ue', '10.00')); ?>"> €
+                    <p class="description">Fuori dall'Unione Europea gli ordini dell'app non si spediscono (resta il ritiro in negozio, se attivo).</p></td></tr>
             </table>
             <p><button class="button button-primary" name="pluma_ev_salva" value="1">Salva</button>
                <button class="button" name="pluma_ev_prodotti" value="1">Ricrea i prodotti mancanti</button></p>
@@ -239,3 +247,42 @@ add_action('woocommerce_order_status_changed', function ($order_id, $from, $to, 
         $order->add_order_note('Attenzione: l\'app eventi non ha ricevuto lo stato «' . esc_html($to) . '». Il progetto potrebbe restare modificabile dal cliente.');
     }
 }, 10, 4);
+
+
+// ---------- spedizione per gli ordini dell'app ----------
+// Se nel carrello ci sono prodotti eventi: Italia e Unione Europea a prezzo fisso, il ritiro in negozio resta;
+// fuori UE nessuna spedizione. Il resto del negozio non cambia.
+function pluma_ev_pacco_eventi($package) {
+    foreach ($package['contents'] ?? [] as $item) if (!empty($item['pluma_eventi'])) return true;
+    return false;
+}
+
+add_filter('woocommerce_package_rates', function ($rates, $package) {
+    if (!pluma_ev_pacco_eventi($package)) return $rates;
+    $paese = strtoupper($package['destination']['country'] ?? '');
+    $out = [];
+    // il ritiro in negozio (se configurato) resta disponibile
+    foreach ($rates as $id => $rate) {
+        $m = $rate->get_method_id();
+        if (in_array($m, ['local_pickup', 'pickup_location'], true) || stripos($rate->get_label(), 'ritiro') !== false) $out[$id] = $rate;
+    }
+    $ue = array_diff(WC()->countries->get_european_union_countries(), ['IT']);
+    if ($paese === 'IT' || $paese === '') {
+        $costo = (float) pluma_ev_opt('sped_it', '7.00');
+        $etichetta = 'Spedizione tracciabile Italia';
+    } elseif (in_array($paese, $ue, true)) {
+        $costo = (float) pluma_ev_opt('sped_ue', '10.00');
+        $etichetta = 'Spedizione Unione Europea';
+    } else {
+        return $out;
+    }
+    $tasse = wc_tax_enabled() ? WC_Tax::calc_shipping_tax($costo, WC_Tax::get_shipping_tax_rates()) : [];
+    $rate = new WC_Shipping_Rate('pluma_eventi_sped', $etichetta, $costo, $tasse, 'pluma_eventi');
+    return ['pluma_eventi_sped' => $rate] + $out;
+}, 100, 2);
+
+// le tariffe dipendono dal contenuto: ricalcola quando cambia il carrello
+add_filter('woocommerce_cart_shipping_packages', function ($packages) {
+    foreach ($packages as &$p) $p['pluma_eventi'] = pluma_ev_pacco_eventi($p) ? 1 : 0;
+    return $packages;
+});
