@@ -43,6 +43,10 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
           guest: iniziale.nomi[0] ?? "",
           readOnly: bloccato,
           watermark: !digitale,
+          // scegliendo in alto un formato segnaposto, anche il tipo da stampare lo segue
+          onFormat: (f: string) => {
+            if (f === "segnaposto" || f === "cavalierino") setD((prev) => (prev.tipoSegnaposto === (f === "cavalierino" ? "cavalierino" : "piatto") ? prev : { ...prev, tipoSegnaposto: f === "cavalierino" ? "cavalierino" : "piatto" }));
+          },
           onChange: (v: { docs: Docs; back: boolean; spunto: string }) => setD((prev) => ({ ...prev, docs: v.docs, back: v.back, spunto: v.spunto })),
         });
         setCaricato("ok");
@@ -85,6 +89,13 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
     });
 
   const ordine = righeStampa(d.qta, d.tipoSegnaposto);
+
+  // il tipo di segnaposto si vede subito: l'editor passa a quel formato
+  function scegliTipo(t: "piatto" | "cavalierino") {
+    set((x) => { x.tipoSegnaposto = t; });
+    ed.current?.setFormat(t === "cavalierino" ? "cavalierino" : "segnaposto");
+    if (window.innerWidth <= 1180) host.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   function aggiornaNomi(txt: string) {
     setNomiTxt(txt);
@@ -171,10 +182,10 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
           <div className="sec">
             <h3>Segnaposti</h3>
             <div className="seg" role="group" aria-label="Tipo di segnaposto da stampare">
-              <button type="button" aria-pressed={d.tipoSegnaposto === "piatto"} onClick={() => set((x) => { x.tipoSegnaposto = "piatto"; })}>
+              <button type="button" aria-pressed={d.tipoSegnaposto === "piatto"} onClick={() => scegliTipo("piatto")}>
                 Semplice 8 × 5
               </button>
-              <button type="button" aria-pressed={d.tipoSegnaposto === "cavalierino"} onClick={() => set((x) => { x.tipoSegnaposto = "cavalierino"; })}>
+              <button type="button" aria-pressed={d.tipoSegnaposto === "cavalierino"} onClick={() => scegliTipo("cavalierino")}>
                 A cavalierino
               </button>
             </div>
