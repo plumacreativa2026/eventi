@@ -5,7 +5,7 @@ export type Gruppo = "bimbi" | "adulti";
 export type EventId = Gruppo | "nascita" | "battesimo" | "compleanno-bimbi" | "compleanno" | "laurea" | "anniversario";
 
 export const EVENTI: { id: Gruppo; nome: string; descr: string; occasioni: string[] }[] = [
-  { id: "bimbi", nome: "Feste per bambini", descr: "Nascite, battesimi e compleanni dei più piccoli", occasioni: ["Nascita", "Battesimo", "Compleanno"] },
+  { id: "bimbi", nome: "Feste per bambini", descr: "Nascite, battesimi, comunioni e compleanni dei più piccoli", occasioni: ["Nascita", "Battesimo", "Comunione", "Compleanno"] },
   { id: "adulti", nome: "Occasioni speciali", descr: "Compleanni, lauree e anniversari", occasioni: ["Compleanno", "Laurea", "Anniversario"] },
 ];
 
