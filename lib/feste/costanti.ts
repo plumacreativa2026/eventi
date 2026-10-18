@@ -109,7 +109,7 @@ export const FRAME_NAMES = ["Arco", "Mezzo arco", "Doppio arco", "Ovale", "Elega
 export const OCC: Record<string, string[]> = {
   "Fiocchi e decorazioni": ["Fiocchetto", "Fiocco con nastri", "Nastro", "Festone", "Ciliegie", "Fiore", "Busta", "Corona", "Ramo di alloro", "Corona di alloro"],
   "Battesimo e nascita": ["Orsetto", "Paperella", "Barchetta", "Gattino", "Cagnolino", "Scarpine", "Cavallo a dondolo", "Elefantino", "Corona"],
-  "Comunione e religiose": ["Calice con ostia", "Colomba", "Croce", "Candela", "Angioletto", "Rosario", "Spiga di grano", "Ramo d'ulivo"],
+  Religiose: ["Calice con ostia", "Colomba", "Croce", "Candela", "Angioletto", "Rosario", "Spiga di grano", "Ramo d'ulivo"],
   Compleanno: ["Palloncini", "Torta con candeline", "Cupcake", "Dinosauro", "Regalo", "Aeroplano", "Elefantino", "Festone"],
   Laurea: ["Tocco di laurea", "Corona di alloro", "Ramo di alloro", "Bottiglia", "Brindisi", "Calici in festa"],
   "Anniversario e cerimonia": ["Torta a piani", "Torta su alzata", "Piramide di calici", "Calici in festa", "Calici di vino", "Coppa", "Cocktail", "Secchiello", "Bouquet", "Tulipani", "Lampadario", "Vaso su colonna"],
