@@ -18,3 +18,7 @@ create index if not exists eventi_progetti_updated on public.eventi_progetti (up
 
 -- Accesso solo dal server dell'app (chiave segreta): nessuna regola pubblica
 alter table public.eventi_progetti enable row level security;
+
+-- Dal 30 ottobre 2026 Supabase non dà più da solo i permessi alle tabelle nuove:
+-- questa riga serve perché il server dell'app possa leggere e scrivere. Si può rieseguire.
+grant select, insert, update, delete on public.eventi_progetti to service_role;
