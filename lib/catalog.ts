@@ -50,7 +50,6 @@ export const PREZZI = {
   menu: 1.2,
   cavalierino: 1.0,
   segnaposto: 0.8,
-  impostazione: 15.0,
 };
 
 // Codici prodotto (SKU) su WooCommerce, creati dal plugin
@@ -60,7 +59,6 @@ export const SKU = {
   menu: "EVENTI-MENU",
   cavalierino: "EVENTI-CAVALIERINO",
   segnaposto: "EVENTI-SEGNAPOSTO",
-  impostazione: "EVENTI-IMPOSTAZIONE",
 } as const;
 export type Voce = keyof typeof SKU;
 
@@ -75,7 +73,6 @@ export const VOCI: { id: Voce; nome: string }[] = [
   { id: "menu", nome: "Menu" },
   { id: "segnaposto", nome: "Segnaposti" },
   { id: "cavalierino", nome: "Segnaposti a cavalierino" },
-  { id: "impostazione", nome: "Impostazione grafica" },
 ];
 
 export const euro = (n: number) => n.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
@@ -94,7 +91,6 @@ export function righeStampa(q: Quantita, tipoSegnaposto: "piatto" | "cavalierino
   add("busta", q.busta);
   add("menu", q.menu);
   add(tipoSegnaposto === "cavalierino" ? "cavalierino" : "segnaposto", q.segnaposto);
-  if (righe.length) righe.push({ voce: "impostazione", qta: 1, prezzo: PREZZI.impostazione });
   const netto = righe.reduce((s, r) => s + r.qta * r.prezzo, 0);
   return { righe, netto: Math.round(netto * 100) / 100, totale: conIva(netto) };
 }

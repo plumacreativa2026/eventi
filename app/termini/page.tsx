@@ -21,7 +21,7 @@ export default function Termini() {
       <h2>Stampa</h2>
       <p>
         Gli ordini di stampa si concludono sul negozio <a href={SHOP_URL}>plumacreativa.it</a>, alle condizioni di vendita del negozio, che indicano anche spedizione, ritiro e tempi di consegna.
-        Ogni ordine comprende un costo fisso di impostazione grafica di {euro(PREZZI.impostazione)} + IVA. Gli stampati sono realizzati sui dati forniti dal cliente: essendo personalizzati, sono esclusi dal diritto di recesso (art. 59, lett. c, Codice del Consumo).
+        Gli stampati sono realizzati sui dati forniti dal cliente: essendo personalizzati, sono esclusi dal diritto di recesso (art. 59, lett. c, Codice del Consumo).
         Il cliente è responsabile di controllare testi e nomi prima dell&apos;ordine; dopo l&apos;ordine il progetto viene bloccato.
       </p>
       <h2>Contenuti</h2>

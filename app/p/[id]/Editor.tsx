@@ -233,7 +233,6 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
             )}
             {ordine.righe.length > 0 && (
               <div className="box">
-                <div className="tot"><span>Impostazione grafica</span><span>{euro(PREZZI.impostazione)}</span></div>
                 <div className="tot"><span>Totale IVA esclusa</span><span>{euro(ordine.netto)}</span></div>
                 <div className="tot big"><span>Totale IVA inclusa</span><span>{euro(ordine.totale)}</span></div>
                 <span className="muted small">Spedizione o ritiro in negozio si scelgono nel carrello.</span>
