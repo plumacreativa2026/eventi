@@ -1,5 +1,5 @@
 import { Legal } from "@/components/Legal";
-import { conIva, euro, PREZZI } from "@/lib/catalog";
+import { conIva, euro, PREZZI, MINIMO } from "@/lib/catalog";
 import { AZIENDA, CONTATTO_EMAIL, SHOP_URL } from "@/lib/site";
 
 export const metadata = { title: "Termini di vendita" };
@@ -21,7 +21,7 @@ export default function Termini() {
       <h2>Stampa</h2>
       <p>
         Gli ordini di stampa si concludono sul negozio <a href={SHOP_URL}>plumacreativa.it</a>, alle condizioni di vendita del negozio, che indicano anche spedizione, ritiro e tempi di consegna.
-        Gli stampati sono realizzati sui dati forniti dal cliente: essendo personalizzati, sono esclusi dal diritto di recesso (art. 59, lett. c, Codice del Consumo).
+        Per ogni articolo stampato (inviti, buste, menu, segnaposti) il minimo d&apos;ordine è di {MINIMO} pezzi. Gli stampati sono realizzati sui dati forniti dal cliente: essendo personalizzati, sono esclusi dal diritto di recesso (art. 59, lett. c, Codice del Consumo).
         Il cliente è responsabile di controllare testi e nomi prima dell&apos;ordine; dopo l&apos;ordine il progetto viene bloccato.
       </p>
       <h2>Contenuti</h2>

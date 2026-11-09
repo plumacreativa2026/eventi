@@ -80,6 +80,16 @@ export const conIva = (n: number) => Math.round(n * (1 + IVA) * 100) / 100;
 
 export type Quantita = { invito: number; busta: number; menu: number; segnaposto: number };
 
+// Quantità minima per ogni articolo stampato (come per i matrimoni)
+export const MINIMO = 10;
+
+// Articoli ordinati in quantità inferiore al minimo (0 = non ordinato, va bene)
+export function sottoMinimo(q: Quantita, tipoSegnaposto: "piatto" | "cavalierino"): string[] {
+  return (["invito", "busta", "menu", "segnaposto"] as const)
+    .filter((k) => { const n = Math.floor(q[k] || 0); return n > 0 && n < MINIMO; })
+    .map((k) => VOCI.find((v) => v.id === (k === "segnaposto" && tipoSegnaposto === "cavalierino" ? "cavalierino" : k))!.nome.toLowerCase());
+}
+
 // Righe dell'ordine di stampa: la scelta piatto/cavalierino decide quale segnaposto si ordina
 export function righeStampa(q: Quantita, tipoSegnaposto: "piatto" | "cavalierino") {
   const righe: { voce: Voce; qta: number; prezzo: number }[] = [];

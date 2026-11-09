@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { righeStampa, SKU } from "@/lib/catalog";
+import { righeStampa, SKU, MINIMO, sottoMinimo } from "@/lib/catalog";
 import { firma } from "@/lib/firma";
 import type { ProjectData } from "@/lib/project";
 import { salvabili } from "@/lib/salva";
@@ -25,6 +25,8 @@ export async function POST(req: NextRequest, { params }: C) {
 
   const { righe } = righeStampa(dati.qta, dati.tipoSegnaposto);
   if (!righe.length) return NextResponse.json({ error: "Indica almeno una quantità da stampare." }, { status: 400 });
+  const pochi = sottoMinimo(dati.qta, dati.tipoSegnaposto);
+  if (pochi.length) return NextResponse.json({ error: `Il minimo è di ${MINIMO} pezzi per articolo: controlla ${pochi.join(", ")}.` }, { status: 400 });
   if (dati.qta.busta > 0 && !dati.coloreBusta) return NextResponse.json({ error: "Scegli il colore delle buste." }, { status: 400 });
   if (dati.qta.segnaposto > 0 && !dati.nomi.length) return NextResponse.json({ error: "Scrivi i nomi degli invitati per i segnaposti." }, { status: 400 });
 

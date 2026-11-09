@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { COLORI_BUSTA, euro, PREZZI, righeStampa, VOCI } from "@/lib/catalog";
+import { COLORI_BUSTA, euro, PREZZI, righeStampa, VOCI, MINIMO, sottoMinimo } from "@/lib/catalog";
 import type { Assets, Docs } from "@/lib/feste/costanti";
 import { createEditor } from "@/lib/feste/editor-dom";
 import { SPUNTI } from "@/lib/feste/spunti";
@@ -89,6 +89,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
     });
 
   const ordine = righeStampa(d.qta, d.tipoSegnaposto);
+  const pochi = sottoMinimo(d.qta, d.tipoSegnaposto);
 
   // il tipo di segnaposto si vede subito: l'editor passa a quel formato
   function scegliTipo(t: "piatto" | "cavalierino") {
@@ -199,7 +200,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
 
           <div className="sec">
             <h3>Stampa</h3>
-            <p className="small muted">Stampiamo noi su carta pregiata, solo fronte. Indica quante copie ti servono.</p>
+            <p className="small muted">Stampiamo noi su carta pregiata, solo fronte. Indica quante copie ti servono: minimo {MINIMO} pezzi per articolo.</p>
             <div className="qty">
               {(["invito", "busta", "menu", "segnaposto"] as const).map((k) => {
                 const voce = k === "segnaposto" && d.tipoSegnaposto === "cavalierino" ? "cavalierino" : k;
@@ -213,6 +214,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
               })}
             </div>
             <p className="small muted">Le buste sono facoltative: lascia 0 se non ti servono.</p>
+            {pochi.length > 0 && <p className="msg err small">Il minimo è di {MINIMO} pezzi per articolo: aumenta {pochi.join(", ")} oppure lascia 0.</p>}
             {d.qta.busta > 0 && (
               <label className="f">
                 Colore delle buste
@@ -238,7 +240,7 @@ export function Editor({ id, codice, iniziale, bloccato, digitale, avviso, conta
                 <span className="muted small">Spedizione o ritiro in negozio si scelgono nel carrello.</span>
               </div>
             )}
-            <button className="btn main full" onClick={vaiAlCarrello} disabled={busy !== "" || ordine.righe.length === 0 || (d.qta.segnaposto > 0 && d.nomi.length === 0) || (d.qta.busta > 0 && !d.coloreBusta)}>
+            <button className="btn main full" onClick={vaiAlCarrello} disabled={busy !== "" || ordine.righe.length === 0 || pochi.length > 0 || (d.qta.segnaposto > 0 && d.nomi.length === 0) || (d.qta.busta > 0 && !d.coloreBusta)}>
               {busy === "carrello" ? "Un momento…" : "Ordina la stampa"}
             </button>
             <p className="small muted">Prima di ordinare controlla bene testi e nomi: stampiamo esattamente quello che vedi. Dopo l&apos;ordine il progetto si blocca.</p>
